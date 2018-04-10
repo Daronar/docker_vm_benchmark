@@ -8,6 +8,7 @@
 	-- по хорошему, парсер, возможно, для каждого свой. Так, для phoronix - это парсер xml
 	-- установщик в VM и Docker (пусть свой образ для каждого теста) и сам инстанс носителя (как понять, что установка завершена???)
 	-- запустить в такое то время
+    -- писать время работы
 
 
 Класс Carrier:
@@ -16,7 +17,7 @@
 	-- как получить доступ (docker exec, ssh и тп)
 	-- ресурсы
 
-Carrier: VM, Docker, Bare-metal
+Carrier: VM, Docker, Bare-metal (bare-metal должен быть равен по ресурсам!!!)
 
 Класс Topology:
 	-- главная сеть
@@ -38,19 +39,44 @@ Carrier: VM, Docker, Bare-metal
 	-- запуск теста (понимаем, что закончился, по истечению времени теста ??? время может увеличиваться из-за  )
 	-- сбор результатов по всем носителям и сравнивание 
 
-	-- запуск теста на металле, чтобы понять, что принимаем за единицу!
+	-- запуск теста на металле, чтобы понять, что принимаем за единицу! (а надо ли?)
 
 	-- КАК ПОНЯТЬ, что система перегружена и надо останавливать тестирование ? 
 		-- возможно, по max_overlap
-
+Disk:
 Test pts/dbench:
 	printf <номер теста> y,  <имя результата>, <id>, <description>, n, n
 	примерное время одного теста - 39 минут (умножаем ли на количество траев?)
 
+Тест pts/aio-stress:
+	printf y, <имя результата>, <id>, <description>, n, n
+    примерное время - 6минут (по факту минута???)
+
+Тест pts/compress-gzip-1.2.0:
+    printf <номер теста> y,  <имя результата>, <id>, <description>, n, n
+    примерное время - 6 минут
+
+CPU:
 Тест pts/apache-1.7.1:
 	printf y, <имя результата>, <id>, <description>, n, n
-		
-	//кажется, общее для всех phoronix, так что удобненько
-	результаты .phoronix-test-suite/test-results/first-apache/test-1.xml, далее парсим xml - <PhoronixTestSuite><Result><Data><Entry><Value>
+
+Тест pts/john-the-ripper:
+    printf 3, y,  <имя результата>, <id>, <description>, n, n
+    примерное время - 2 минуты
+
+Memory:
+Тест  pts/stream:
+    printf 4, y,  <имя результата>, <id>, <description>, n, n
+    все опции - 21 минута (надо бить) (один тест 6)
+
+Тест pts/cachebench:
+    printf 3, y,  <имя результата>, <id>, <description>, n, n
+    примерное время - 13 минут 		(6m в docker)
+    // пример команды time printf '3\ny\ncachebench-4\ncachebench-4\ndesc\nvn\nn' |  phoronix-test-suite run pts/cachebench
+
+
+//кажется, общее для всех phoronix, так что удобненько
+результаты .phoronix-test-suite/test-results/first-apache/test-1.xml, далее парсим xml - <PhoronixTestSuite><Result><Data><Entry><Value>
 
 Алгоритм запуска теста:
+
