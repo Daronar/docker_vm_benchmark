@@ -22,7 +22,8 @@ class CPUController:
             self.last_used_num = self.last_used_num + num
         return ','.join(map(str, set))
 
-c = CPUController()
-num = 4
-for i in range(10):
-    print(c.get_new_set(num), end='||')
+if __name__ == "__main__":
+    c = CPUController()
+    num = 4
+    for i in range(10):
+        print(c.get_new_set(num), end='||')

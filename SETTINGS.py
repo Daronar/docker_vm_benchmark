@@ -7,3 +7,4 @@ PASSWORD = "r00tme"
 
 
 CPU_NUM = 8
+RAM_NUM = 4*1024*1024
