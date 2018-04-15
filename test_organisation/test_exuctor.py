@@ -1,10 +1,11 @@
-import sys
-from helpers.cpu_controller import CPUController
 import SETTINGS
 import time
 from test_organisation.test import Test
 from kvm.kvmfactory import KvmFactory
 import os
+from container.docker_factory import DockerFactory
+import statistics
+import json
 
 class TestExecutor:
     def __init__(self):
@@ -31,10 +32,13 @@ class TestExecutor:
         self.test_result = {}
 
     def create_path_for_result(self, exc_desc):
-        if not os.path.exists(exc_desc):
-            os.mkdir(exc_desc)
-            os.chmod(exc_desc, 0o777)
-        self.result_file = exc_desc + '/' + str(self.test.name) + "_result.txt"
+        if not os.path.exists('results'):
+            os.mkdir('results')
+            os.chmod('results', 0o775)
+        if not os.path.exists('results/' + exc_desc):
+            os.mkdir('results/' + exc_desc)
+            os.chmod('results/' + exc_desc, 0o775)
+        self.result_file = 'results/' + exc_desc + '/' + str(self.test.name) + "_result.txt"
         f = open(self.result_file, 'w+')
         f.close()
         os.chmod(self.result_file, 0o666)
@@ -47,6 +51,9 @@ class TestExecutor:
         if carrier_type == "kvm":
             self.carrier_factory = KvmFactory(self.cpu_num, self.ram_num)
             return "kvm"
+        elif carrier_type == "docker":
+            self.carrier_factory = DockerFactory(self.cpu_num, self.ram_num)
+            return "docker"
         else:
             return None
 
@@ -78,17 +85,30 @@ class TestExecutor:
                 car.send_cmd(self.test.clear_cmd)
 
     def get_results_from_carriers(self):
-        average = 0.0
+        current_results = []
         for car in self.carriers:
-            average += float(self.test.result_function(car.send_cmd(self.test.result_cmd)))
-        average /= len(self.carriers)
-        return average
+            current_results.append(float(self.test.result_function(car.send_cmd(self.test.result_cmd))))
+        return current_results
+        # average = 0.0
+        # for car in self.carriers:
+        #     average += float(self.test.result_function(car.send_cmd(self.test.result_cmd)))
+        # average /= len(self.carriers)
+        # return average
 
 
-    def save_results(self, result):
+    def save_results(self, history):
         f = open(self.result_file, 'a')
-        print(str(self.current_overlap_cpu) + ' ' + str(result))
-        f.write(str(self.current_overlap_cpu) + ' ' + str(result) + '\n')
+        # print(str(self.current_overlap_cpu) + ' ' + str(result))
+        # f.write(str(self.current_overlap_cpu) + ' ' + str(result) + '\n')
+        to_write = {}
+        to_write.update({
+            "overlap": self.current_overlap_cpu,
+            "amount": len(self.carriers),
+            "history": history,
+            "total_average": statistics.mean([x["average"] for x in history]),
+            "total_median": statistics.median([x["median"] for x in history])
+        })
+        f.write(json.dumps(to_write, indent=4, sort_keys=True))
         f.close()
 
     def execute_test_in_tries(self):
@@ -98,7 +118,8 @@ class TestExecutor:
                 self.carriers.append(self.carrier_factory.start_test_carrier(self.test.name, self.test.install_cmd))
             print("# 1.5 Update condition")
             self.update_condition()
-            result_for_tries = []
+            # result_for_tries = []
+            history = []
             for i in range(self.tries_num):
                 print("Try number is", i)
                 print("# 2. Compute test_organisation start time.")
@@ -111,10 +132,17 @@ class TestExecutor:
                 # time.sleep(10 + self.test.execution_time)
                 print("# 5. Get results of test.")
                 # self.test_result[len(self.carriers)] = self.get_results_from_carriers()
-                result_for_tries.append(self.get_results_from_carriers())
+                # result_for_tries.append(self.get_results_from_carriers())
+                try_results = self.get_results_from_carriers()
+                history.append({
+                    "try_number": i,
+                    "carriers": try_results,
+                    "median": statistics.median(try_results),
+                    "average": statistics.mean(try_results)
+                })
                 print("# 6. Clear results of test")
                 self.clear_results_in_carriers()
-            self.save_results(sum(result_for_tries)/len(result_for_tries))
+            self.save_results(history)
 
     def close(self):
         print("Destroying topology!")

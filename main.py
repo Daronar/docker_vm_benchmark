@@ -21,18 +21,25 @@ if __name__ == "__main__":
     if cpu_for_instance != "None":
         te.cpu_num = int(cpu_for_instance)
     if cpu_for_instance != "None":
-        te.ram_num = int(ram_for_instance) * 1024
+        te.ram_num = int(ram_for_instance)
 
     te.set_test(t)
     te.set_factory(type_of_carrier)
     # main job
     te.create_path_for_result(exp_desc)
-    te.execute_test_in_tries()
 
-    print("Are you ready to exit?:")
-    ans = input()
-    while ans != "Y":
+    try:
+        te.execute_test_in_tries()
+    # print("Are you ready to exit?:")
+    # ans = input()
+    # while ans != "Y":
+    #     print("Are you ready to exit?:")
+    #     ans = input()
+    except Exception:
         print("Are you ready to exit?:")
         ans = input()
-
+        while ans != "Y":
+            print("Are you ready to exit?:")
+            ans = input()
+        te.close()
     te.close()

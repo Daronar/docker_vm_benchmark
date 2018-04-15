@@ -11,7 +11,10 @@ class KvmFactory:
     def __init__(self, cpu_num=None, ram_num=None):
         self.cpu_con = CPUController()
         self.cpu_num = cpu_num
-        self.ram_num = ram_num
+        if ram_num is not None:
+            self.ram_num = ram_num * 1024 # set in Kb
+        else:
+            self.ram_num = ram_num
         self.workers = []
         self.mac_generator = mac_generator.mac_generator()
         self.conn = libvirt.open("qemu:///system")
