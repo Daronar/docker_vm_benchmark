@@ -6,6 +6,7 @@ import os
 from container.docker_factory import DockerFactory
 import statistics
 import json
+from docker_in_vm.docker_in_vm_factory import DockerInVmFactory
 
 class TestExecutor:
     def __init__(self):
@@ -54,6 +55,8 @@ class TestExecutor:
         elif carrier_type == "docker":
             self.carrier_factory = DockerFactory(self.cpu_num, self.ram_num)
             return "docker"
+        elif carrier_type == "dockerinvm":
+            self.carrier_factory = DockerInVmFactory(self.cpu_num, self.ram_num)
         else:
             return None
 
