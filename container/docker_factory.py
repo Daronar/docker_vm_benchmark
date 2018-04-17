@@ -42,7 +42,7 @@ class DockerFactory:
             print("# 1. Start base container")
             base = self.conn.containers.run(image=SETTINGS.BASE_IMAGE, tty=True, detach=True, name=base_name, command="bash")
             print("# 2. Install test in base container")
-            base.exec_run(cmd=install_cmd)
+            base.exec_run(cmd='bash -c "%s"'%install_cmd, tty=True)
             print("# 3. Commit base container as image for tests")
             base.commit(test_name)
             self.base_image = test_name
