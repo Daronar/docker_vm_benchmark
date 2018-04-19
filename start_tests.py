@@ -1,5 +1,7 @@
 import subprocess
 
+# author Pavel Mikheev
+
 test_num = 3
 
 carrier_types = ["docker", "kvm", "dockerinvm"]
