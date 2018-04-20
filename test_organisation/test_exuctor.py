@@ -90,7 +90,12 @@ class TestExecutor:
     def get_results_from_carriers(self):
         current_results = []
         for car in self.carriers:
-            current_results.append(float(self.test.result_function(car.send_cmd(self.test.result_cmd))))
+            try:
+                current_results.append(float(self.test.result_function(car.send_cmd(self.test.result_cmd))))
+            except Exception:
+                print("Can't take the result, pass it")
+        if len(current_results) == 0:
+            raise BaseException("No result, stop test")
         return current_results
         # average = 0.0
         # for car in self.carriers:
