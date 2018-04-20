@@ -1,7 +1,7 @@
 import paramiko
 import SETTINGS
 from Exceptions.vm_exception import VMException
-
+import time
 
 class VirtuaMachine:
     def __init__(self):
@@ -15,9 +15,19 @@ class VirtuaMachine:
         self.cpu_set = ""
 
     def open_ssh(self):
-        self.ssh = paramiko.SSHClient()
-        self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.ssh.connect(hostname=self.ip, username=SETTINGS.USER, password=SETTINGS.PASSWORD, port=22)
+        tries = 0
+        while True:
+            try:
+                self.ssh = paramiko.SSHClient()
+                self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                self.ssh.connect(hostname=self.ip, username=SETTINGS.USER, password=SETTINGS.PASSWORD, port=22)
+                break
+            except Exception:
+                tries += 1
+                if tries > 10:
+                    break
+                time.sleep(4)
+                continue
 
     def send_cmd_without_answer(self, cmd):
         self.ssh.exec_command(cmd)
