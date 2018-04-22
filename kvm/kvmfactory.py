@@ -38,6 +38,7 @@ class KvmFactory:
         # init new VM class instance?
 
     def destroy_vm(self, vm: VirtuaMachine):
+        print("Destroying VM", vm.name)
         vm.ssh.close()
         vm.domain.destroy()
         vm.domain.undefine()

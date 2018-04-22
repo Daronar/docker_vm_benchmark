@@ -2,6 +2,8 @@ import sys
 from test_organisation.test import Test
 from test_organisation.test_exuctor import TestExecutor
 
+# def main_function(type_of_carrier, path_to_test, cpu_for_instance, ram_for_instance, )
+
 if __name__ == "__main__":
     type_of_carrier = sys.argv[1]
     path_to_test = sys.argv[2]
@@ -28,13 +30,11 @@ if __name__ == "__main__":
     # main job
     te.create_path_for_result(exp_desc)
 
+
     try:
         te.execute_test_in_tries()
-    # print("Are you ready to exit?:")
-    # ans = input()
-    # while ans != "Y":
-    #     print("Are you ready to exit?:")
-    #     ans = input()
+    except KeyboardInterrupt:
+        te.close()
     except Exception:
         print("Are you ready to exit?:")
         ans = input()
@@ -42,4 +42,5 @@ if __name__ == "__main__":
             print("Are you ready to exit?:")
             ans = input()
         te.close()
-    te.close()
+    else:
+        te.close()
