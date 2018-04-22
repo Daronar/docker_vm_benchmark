@@ -85,7 +85,11 @@ class TestExecutor:
     def clear_results_in_carriers(self):
         if self.test.clear_cmd != "":
             for car in self.carriers:
-                car.send_cmd(self.test.clear_cmd)
+                try:
+                    car.send_cmd(self.test.clear_cmd)
+                except Exception:
+                    continue
+
 
     def get_results_from_carriers(self):
         current_results = []
