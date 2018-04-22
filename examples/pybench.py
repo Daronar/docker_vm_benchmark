@@ -1,7 +1,7 @@
 
 name = "pybench"
 
-install_cmd = "apt install python3;phoronix-test-suite install pts/pybench"
+install_cmd = "apt install -y python3;phoronix-test-suite install pts/pybench"
 
 run_cmd = "printf 'y\npyb0\npyb0\nsimple_pyb\nn\nn' | phoronix-test-suite run pts/pybench"
 
