@@ -7,9 +7,9 @@ run_cmd = "printf 'y\npyb0\npyb0\nsimple_pyb\nn\nn' | phoronix-test-suite run pt
 
 execution_time = 120 #minutes
 
-result_cmd = "cat .phoronix-test-suite/test-results/pb0/test-1.xml | grep 'Value'"
+result_cmd = "cat .phoronix-test-suite/test-results/pyb0/test-1.xml | grep 'Value'"
 
-clear_result = "rm -r .phoronix-test-suite/test-results/pb0"
+clear_result = "rm -r .phoronix-test-suite/test-results/pyb0"
 
 def result_function(result):
     f = result.split('>')
