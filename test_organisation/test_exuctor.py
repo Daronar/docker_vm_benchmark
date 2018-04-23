@@ -100,10 +100,10 @@ class TestExecutor:
             try:
                 current_results.append(float(self.test.result_function(car.send_cmd(self.test.result_cmd))))
             except Exception:
-                waiting_time += 5.0
+                waiting_time += 1
                 print("Can't take the result, pass it")
         if len(current_results) < len(self.carriers)//2:
-            time.sleep(60.0 + waiting_time)
+            time.sleep(30.0 * waiting_time)
             self.get_results_from_carriers(try_number=try_number+1)
         if len(current_results) == 0:
             raise BaseException("No result, stop test")

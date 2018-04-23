@@ -42,5 +42,7 @@ if __name__ == "__main__":
             print("Are you ready to exit?:")
             ans = input()
         te.close()
+    except BaseException:
+        te.close()
     else:
         te.close()
