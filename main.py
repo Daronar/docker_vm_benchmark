@@ -36,11 +36,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         te.close()
     except Exception:
-        print("Are you ready to exit?:")
-        ans = input()
-        while ans != "Y":
-            print("Are you ready to exit?:")
-            ans = input()
         te.close()
     except BaseException:
         te.close()
