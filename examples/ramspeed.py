@@ -5,7 +5,7 @@ install_cmd = "phoronix-test-suite install pts/ramspeed"
 
 run_cmd = "printf '4\n2\ny\nrs\nrs\nsimple_rs\nn\nn' | phoronix-test-suite run pts/ramspeed"
 
-execution_time = 480 #seconds, maybe unused field
+execution_time = 240 #seconds, maybe unused field
 
 result_cmd = "cat .phoronix-test-suite/test-results/rs/test-1.xml | grep 'Value'"
 

@@ -10,6 +10,7 @@ from docker_in_vm.docker_in_vm_factory import DockerInVmFactory
 
 class TestExecutor:
     def __init__(self):
+        self.waiting_time = 30
 
         self.result_file = None
 
@@ -95,15 +96,15 @@ class TestExecutor:
         if try_number == 3:
             raise BaseException("Too long to take results, stop test.")
         current_results = []
-        waiting_time = 0
+        void_result = 0
         for car in self.carriers:
             try:
                 current_results.append(float(self.test.result_function(car.send_cmd(self.test.result_cmd))))
             except Exception:
-                waiting_time += 1
+                void_result += 1
                 print("Can't take the result, pass it")
         if len(current_results) < len(self.carriers)//2:
-            time.sleep(30.0 * waiting_time)
+            time.sleep(self.waiting_time * void_result)
             self.get_results_from_carriers(try_number=try_number+1)
         if len(current_results) == 0:
             raise BaseException("No result, stop test")
@@ -147,7 +148,7 @@ class TestExecutor:
                 self.start_test_in_carriers(start_time)
                 print("# 4. Wait time of test (this time can increase while carriers' amount increase)")
                 self.start_test_in_last_carrier(start_time)
-                time.sleep(10)
+                time.sleep(self.waiting_time)
                 # time.sleep(10 + self.test.execution_time)
                 print("# 5. Get results of test.")
                 # self.test_result[len(self.carriers)] = self.get_results_from_carriers()

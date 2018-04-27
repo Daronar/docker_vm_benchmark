@@ -17,7 +17,11 @@ if __name__ == "__main__":
     t.load(path_to_test)
 
 
+
+
     te = TestExecutor()
+    if len(sys.argv) > 8:
+        te.waiting_time = int(sys.argv[8])
     te.max_overlap_cpu = float(max_overlap)
     te.tries_num = int(tries_amount)
     if cpu_for_instance != "None":
