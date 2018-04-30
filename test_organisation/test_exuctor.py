@@ -96,15 +96,13 @@ class TestExecutor:
         if try_number == 3:
             raise BaseException("Too long to take results, stop test.")
         current_results = []
-        void_result = 0
         for car in self.carriers:
             try:
                 current_results.append(float(self.test.result_function(car.send_cmd(self.test.result_cmd))))
             except Exception:
-                void_result += 1
-                print("Can't take the result, pass it")
+                print("Can't take the result, sleeping")
+                time.sleep(self.waiting_time)
         if len(current_results) < len(self.carriers)//2:
-            time.sleep(self.waiting_time * void_result)
             self.get_results_from_carriers(try_number=try_number+1)
         if len(current_results) == 0:
             raise BaseException("No result, stop test")
